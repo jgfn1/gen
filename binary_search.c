@@ -14,6 +14,6 @@ int binary_search(int* vector, int vec_size, int x)
 		
 		else
 			left = index + 1;
-	}while(left <= right);
+	}while(left <= right); 
 	return -1;
 }
