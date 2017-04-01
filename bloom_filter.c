@@ -112,6 +112,7 @@ int bloom_query(bloom_filter* bloom, char* target)
 	//For all the bases'-based hash functions
 	for(j = 0; j < bloom->queries_quant; ++j)
 	{
+		// printf("b--lau\n");
 		index = 0;
 		//Checks if the queried string is in the Bloom Filter
 		for(k = str_size - 1; k > -1; --k)
