@@ -76,7 +76,6 @@ int main()
 
 void bloom_add(bloom_filter* bloom)
 {
-
 	int i;
 	int j;
 	int k;
@@ -93,16 +92,18 @@ void bloom_add(bloom_filter* bloom)
 			//Compute the indexes' value feeding the hash function with all the characters of the string
 			for(k = (str_size - 1); k > -1; k--)
 			{
-				index = (bloom->str_vec[i][k] + (bloom->hash_base_vec[j] * index)) % bloom->bool_vec_size;
+				index = ((bloom->str_vec[i][k] + (bloom->hash_base_vec[j] * index)) % bloom->bool_vec_size);
 			}
 			bloom->bool_vec[index] = 1;
+			// printf("Vector[%d] = 1\n", index);
 		}
+		// printf("\n");
 	}
+	
 }
 
 int bloom_query(bloom_filter* bloom, char* target)
 {
-	int i;
 	int j;
 	int k;
 	int index;
@@ -115,16 +116,26 @@ int bloom_query(bloom_filter* bloom, char* target)
 		// printf("b--lau\n");
 		index = 0;
 		//Checks if the queried string is in the Bloom Filter
-		for(k = str_size - 1; k > -1; --k)
-			index = (target[k] + (bloom->hash_base_vec[j] * index)) % bloom->bool_vec_size;
-		if(bloom->bool_vec[index] == 0)
-			return 0;
+		for(k = (str_size - 1); k > -1; --k)
+		{
+			index = ((target[k] + (bloom->hash_base_vec[j] * index)) % bloom->bool_vec_size);
+		}	
+			if(bloom->bool_vec[index] == 0)
+			{
+				printf("index 0: %d\n", index);
+				return 0;
+			}
 	}
 	int result = binary_search_string(bloom->str_vec, bloom->str_quant, target);
+	int i;
+	for(i = 0; i < bloom->bool_vec_size; ++i)
+		printf("bool_vec[%d] = %d\n", i, bloom->bool_vec[i]);
+	printf("String: %s\n", target);
+	printf("Result: %d\n", result);
 	if(result != -1)
-		return 2;
-	else
 		return 1;
+	else
+		return 2;
 }
 
 int binary_search_string(char** vector, int str_quant, char* target)
