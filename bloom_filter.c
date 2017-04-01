@@ -91,7 +91,7 @@ void bloom_add(bloom_filter* bloom)
 		{
 			index = 0;
 			//Compute the indexes' value feeding the hash function with all the characters of the string
-			for(k = str_size - 1; k > -1 /*k >= 0*/; --k);
+			for(k = (str_size - 1); k > -1; k--)
 			{
 				index = (bloom->str_vec[i][k] + (bloom->hash_base_vec[j] * index)) % bloom->bool_vec_size;
 			}
@@ -109,13 +109,12 @@ int bloom_query(bloom_filter* bloom, char* target)
 	int str_size;
 	//For the queried string
 	str_size = strlen(target);
-	printf("blau: %d\n", str_size);
 	//For all the bases'-based hash functions
 	for(j = 0; j < bloom->queries_quant; ++j)
 	{
 		index = 0;
 		//Checks if the queried string is in the Bloom Filter
-		for(k = str_size - 1; k > -1 /*k >= 0*/; --k)
+		for(k = str_size - 1; k > -1; --k)
 			index = (target[k] + (bloom->hash_base_vec[j] * index)) % bloom->bool_vec_size;
 		if(bloom->bool_vec[index] == 0)
 			return 0;
