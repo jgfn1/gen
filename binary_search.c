@@ -1,3 +1,13 @@
+#include "stdio.h"
+#include "stdlib.h"
+
+int binary_search(int* vector, int vec_size, int x);
+int main()
+{
+
+	return 0;
+}
+
 int binary_search(int* vector, int vec_size, int x)
 {
 	int left = 0;
