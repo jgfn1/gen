@@ -22,7 +22,7 @@ typedef struct bloom_filter
 
 int binary_search_string(char** vector, int str_quant, char* target);
 void bloom_add(bloom_filter* bloom);
-int bloom_query(bloom_filter* bloom);
+int bloom_query(bloom_filter* bloom, char* target);
 
 int main()
 {
@@ -48,21 +48,83 @@ int main()
 	bloom.hash_base_vec = (int*) malloc(bloom.hash_func_quant * sizeof(int));
 	
 	//Reads all the hash bases
-	for(i = 0; i < bloom.bool_vec_size; ++i)
+	for(i = 0; i < bloom.hash_func_quant; ++i)
+	{
 		scanf("%d", &bloom.hash_base_vec[i]);
+	}
 
-	
+	//Executes the hash function and set the bool_vec values
+	bloom_add(&bloom);
 
+	//Reads the quantity of queries to be made
+	scanf("%d", &bloom.queries_quant);
+
+	//Allocates the vector which saves the queries' strings
+	bloom.query_str_vec = (char**) malloc(bloom.queries_quant * sizeof(char*));
+	for (i = 0; i < bloom.queries_quant; ++i)
+		bloom.query_str_vec[i] = (char*) malloc(str_max_size * sizeof(char));	
+
+	//Reads all the queries' strings
+	for(i = 0; i < bloom.queries_quant; ++i)
+	{
+		scanf(" %s", bloom.query_str_vec[i]);
+	 	printf("%d\n", bloom_query(&bloom, bloom.query_str_vec[i]));
+	}
+
+	return 0;
 }
 
 void bloom_add(bloom_filter* bloom)
 {
 
+	int i;
+	int j;
+	int k;
+	int index;
+	int str_size;
+	//For all the users' strings
+	for(i = 0; i < bloom->str_quant; ++i)
+	{
+		str_size = strlen(bloom->str_vec[i]);
+		//For all the bases'-based hash functions
+		for(j = 0; j < bloom->hash_func_quant; ++j)
+		{
+			index = 0;
+			//Compute the indexes' value feeding the hash function with all the characters of the string
+			for(k = str_size - 1; k > -1 /*k >= 0*/; --k);
+			{
+				index = (bloom->str_vec[i][k] + (bloom->hash_base_vec[j] * index)) % bloom->bool_vec_size;
+			}
+			bloom->bool_vec[index] = 1;
+		}
+	}
 }
 
-int bloom_query(bloom_filter* bloom)
+int bloom_query(bloom_filter* bloom, char* target)
 {
-
+	int i;
+	int j;
+	int k;
+	int index;
+	int str_size;
+	//For the queried string
+	str_size = strlen(target);
+	printf("blau: %d\n", str_size);
+	//For all the bases'-based hash functions
+	for(j = 0; j < bloom->queries_quant; ++j)
+	{
+		index = 0;
+		//Checks if the queried string is in the Bloom Filter
+		for(k = str_size - 1; k > -1 /*k >= 0*/; --k)
+			index = (target[k] + (bloom->hash_base_vec[j] * index)) % bloom->bool_vec_size;
+		if(bloom->bool_vec[index] == 0)
+			return 0;
+	}
+	int result = binary_search_string(bloom->str_vec, bloom->str_quant, target);
+	if(result != -1)
+		return 2;
+	else
+		return 1;
 }
 
 int binary_search_string(char** vector, int str_quant, char* target)
