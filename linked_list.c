@@ -16,7 +16,7 @@ lists* list_pos(lists* head, int pos);
 int main(void)
 {
 	/*int n;
-	
+
 	scanf("%d", n);*/
 	lists* head = (lists*) malloc(sizeof(lists));
 	head->next = NULL;
@@ -55,6 +55,14 @@ lists* list_pos(lists* head, int pos)
 		cur = cur->next;
 		++i;
 	}
+	return cur;
+}
+
+lists* list_find(lists* head, int value)
+{
+	lists* cur = head;
+	while((cur->next != NULL) && (cur->next->val != v))
+		cur = cur->next;
 	return cur;
 }
 
