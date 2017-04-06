@@ -8,11 +8,14 @@ typedef struct linked_list
 	int val;
 } lists;
 
-lists* list_insert(lists* cur, int v);
+lists* list_pos(lists* head, int pos);
+lists* list_find(lists* head, int value);
 
+lists* list_insert(lists* cur, int v);
 int list_delete(lists* cur);
 
-lists* list_pos(lists* head, int pos);
+void enqueue(lists* front, lists* rear, int v);
+int dequeue(lists* front, lists* rear);
 
 int main(void)
 {
@@ -66,7 +69,7 @@ lists* list_find(lists* head, int value)
 	return cur;
 }
 
-lists* list_insert(lists* cur, int v)
+lists* list_insert(lists* cur, int v)	// Push
 {
 	lists* N  = (lists*) malloc(sizeof(lists));
 	N->val = v;
@@ -75,7 +78,7 @@ lists* list_insert(lists* cur, int v)
 	return cur;
 }
 
-int list_delete(lists* cur)
+int list_delete(lists* cur)	//Pop
 {
 	if(cur->next != NULL)
 	{
@@ -85,4 +88,24 @@ int list_delete(lists* cur)
 		free(p);
 		return v;
 	}
+}
+
+void enqueue(lists* front, lists* rear, int v)
+{
+	lists* new_rear = list_insert(rear, v);
+	rear = new_rear->next;
+}
+
+int dequeue(lists* front, lists* rear)
+{
+	int v = list_delete(front);
+	lists* new_rear;
+	lists* new_front = front;
+	if(new_front == NULL)
+	{
+		new_rear = new_front;
+		rear = new_rear;
+		front = new_front;
+	}
+	return v;
 }
