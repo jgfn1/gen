@@ -16,6 +16,7 @@ lists* list_pos(lists* head, int pos);
 int main(void)
 {
 	/*int n;
+	
 	scanf("%d", n);*/
 	lists* head = (lists*) malloc(sizeof(lists));
 	head->next = NULL;
