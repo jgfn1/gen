@@ -9,9 +9,71 @@ typedef struct tree
 	int value;
 } tree;
 
+tree* BST_delete(tree* root, int value);
+tree* BST_delete_min(tree* root);
+tree* BST_search(tree* root, int value);
+tree* BST_insert(tree* root, int value);
+int max(int a, int b);
+
+int BT_height(tree* root);
+bool BT_pre_order(tree* root);
+bool BT_in_order(tree* root);
+bool BT_post_order(tree* root);
+
+int global;
+
 int main()
 {
-	tree* root;
+	tree* root = NULL;
+
+	int value;
+	int command;
+	do 
+	{
+		printf("Type 1 to insert a node, 2 to delete or 0 to exit: ");
+		scanf("%d", &command);
+
+		if(command == 1)
+		{
+			printf("Type the value to be inserted: ");
+			scanf("%d", &value);
+			root = BST_insert(root, value);
+			printf("Height of the Tree: %d\n", BT_height(root));
+			
+			printf("Pre-order Traversal:\n");
+			BT_pre_order(root);
+			printf("\n");
+
+			printf("In-order Traversal:\n");
+			BT_in_order(root);
+			printf("\n");
+
+			printf("Post-order Traversal:\n");
+			BT_post_order(root);
+			printf("\n");
+		}
+		else if(command == 2)
+		{
+			printf("Type the value to be deleted: ");
+			scanf("%d", &value);
+			root = BST_delete(root, value);
+			printf("Height of the Tree: %d\n", BT_height(root));
+			
+			printf("Pre-order Traversal:\n");
+			BT_pre_order(root);
+			printf("\n");
+
+			printf("In-order Traversal:\n");
+			BT_in_order(root);
+			printf("\n");
+
+			printf("Post-order Traversal:\n");
+			BT_post_order(root);
+			printf("\n");
+		}
+
+	} while(command != 0);
+
 	return 0;
 }
 
@@ -20,8 +82,10 @@ tree* BST_delete(tree* root, int value)
 	if(root == NULL)
 		return NULL;
 	else if(value < root->value)
+	{
 		root->left = BST_delete(root->left, value);
 		return root;
+	}
 	else if(value > root->value)
 	{
 		root->right = BST_delete(root->right, value);
@@ -43,25 +107,26 @@ tree* BST_delete(tree* root, int value)
 		}
 		else
 		{
-			root->value = BST_delete_min(root->right);
+			root->right = BST_delete_min(root->right);
+			root->value = global;
 			return root;
 		}
 	}
 }
 
-int BST_delete_min(tree* root)	//The root shall not be NULL
+tree* BST_delete_min(tree* root)	//The root shall not be NULL
 {
+	tree* new_root;
 	if(root->left == NULL)
 	{
-		tree* new_root = root->right;	
-		tree* old_root = root;
-		root = new_root;
-		int removed_value = root->value;
-		free(old_root);
-		return removed_value;
+		new_root = root->right;	
+		global = root->value;
+		free(root);
+		return new_root;
 	}
 	else
-		return BST_delete_min(root->left);
+		root->left = BST_delete_min(root->left);
+		return root;
 }
 
 tree* BST_search(tree* root, int value)
@@ -85,9 +150,11 @@ tree* BST_insert(tree* root, int value)
 	if(root == NULL)
 	{
 		tree* node = (tree*) malloc(sizeof(tree));
-		node->value = v;
+		node->value = value;
 		node->left = NULL;
 		node->right = NULL;
+		root = node;
+		return node;
 	}
 	else if(value < root->value)
 	{
@@ -103,7 +170,7 @@ tree* BST_insert(tree* root, int value)
 
 int max(int a, int b)
 {
-	(a >= b)? return a : return b;
+	return (a >= b)? a : b;
 }
 
 int BT_height(tree* root)
@@ -121,9 +188,9 @@ bool BT_pre_order(tree* root)
 {
 	if(root != NULL)
 	{
-		printf("%d\n", root->value);
-		pre_order(root->left);
-		pre_order(root->right);
+		printf("%d ", root->value);
+		BT_pre_order(root->left);
+		BT_pre_order(root->right);
 		return true;
 	}
 	return false;
@@ -133,9 +200,9 @@ bool BT_in_order(tree* root)
 {
 	if(root != NULL)
 	{
-		pre_order(root->left);
-		printf("%d\n", root->value);
-		pre_order(root->right);
+		BT_in_order(root->left);
+		printf("%d ", root->value);
+		BT_in_order(root->right);
 		return true;
 	}
 	return false;
@@ -145,9 +212,9 @@ bool BT_post_order(tree* root)
 {
 	if(root != NULL)
 	{
-		pre_order(root->left);
-		pre_order(root->right);
-		printf("%d\n", root->value);
+		BT_post_order(root->left);
+		BT_post_order(root->right);
+		printf("%d ", root->value);
 		return true;
 	}
 	return false;
