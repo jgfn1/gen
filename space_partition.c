@@ -35,6 +35,7 @@ int main()
 	long long int right_del_lim;
 	long long int i;
 	char command[3];
+	
 
 	long long int* obj_arr;
 
