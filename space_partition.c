@@ -19,32 +19,34 @@ int BT_height(tree* root);
 bool BT_pre_order(tree* root);
 bool BT_in_order(tree* root);
 
+void scene_array_builder(long long int* obj_arr, long long int obj_num, long long int seedD, long long int param_A, long long int param_C, long long int dist_sup_lim);
+
 int global;
 
 int main()
 {
 	tree* root = NULL;
-	long long int obj_num;
-	long long int dist_sup_lim;
-	long long int seedD;
-	long long int param_A;
-	long long int param_B;
-	long long int op_quant;
-	long long int insert_dist;
-	long long int left_del_lim;
-	long long int right_del_lim;
+	long long int obj_num;			//N
+	long long int dist_sup_lim;		//M
+	long long int seedD;			//seedD
+	long long int param_A;			//A
+	long long int param_C;			//C
+	long long int op_quant;			//Q
+	long long int insert_dist;		//D
+	long long int left_del_lim;		//L
+	long long int right_del_lim;	//R
 	long long int i;
 	char command[3];
-	
+
 
 	long long int* obj_arr;
 
-	scanf("%lld %lld %lld %lld %lld", &obj_num, &dist_sup_lim, &seedD, &param_A, &param_B);
+	scanf("%lld %lld %lld %lld %lld", &obj_num, &dist_sup_lim, &seedD, &param_A, &param_C);
 	obj_arr = (long long int*) malloc(obj_num * sizeof(long long int));
-	//call the tree-generator function
-
-
-	scanf("%lld", &op_quant);
+	//call the scene_array_builder function
+	scene_array_builder(obj_arr, obj_num, seedD, param_A, param_C, dist_sup_lim);
+	//call the BST_builder function
+	/*scanf("%lld", &op_quant);
 	for(i = 0; i < op_quant; ++i)
 	{
 		scanf("%[^\n]", command);
@@ -58,8 +60,20 @@ int main()
 			scanf("%lld %lld", &left_del_lim, &right_del_lim);
 			//call deletion function
 		}
-	}
+	}*/
 	return 0;
+}
+
+void scene_array_builder(long long int* obj_arr, long long int obj_num, long long int seedD, long long int param_A, long long int param_C, long long int dist_sup_lim)
+{
+	obj_arr[0] = seedD;
+	printf("%lld\n", obj_arr[0]);
+	long long int i;
+	for(i = 1; i < obj_num; ++i)
+	{
+		obj_arr[i] = (((param_A * obj_arr[i - 1]) + param_C) % dist_sup_lim);
+		printf("%lld\n", obj_arr[i]);
+	}	
 }
 
 tree* BST_delete(tree* root, int value)
