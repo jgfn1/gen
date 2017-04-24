@@ -1,6 +1,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "stdbool.h"
+#include "string.h"
 
 typedef struct tree
 {
@@ -23,7 +24,40 @@ int global;
 int main()
 {
 	tree* root = NULL;
+	long long int obj_num;
+	long long int dist_sup_lim;
+	long long int seedD;
+	long long int param_A;
+	long long int param_B;
+	long long int op_quant;
+	long long int insert_dist;
+	long long int left_del_lim;
+	long long int right_del_lim;
+	long long int i;
+	char command[3];
 
+	long long int* obj_arr;
+
+	scanf("%lld %lld %lld %lld %lld", &obj_num, &dist_sup_lim, &seedD, &param_A, &param_B);
+	obj_arr = (long long int*) malloc(obj_num * sizeof(long long int));
+	//call the tree-generator function
+
+
+	scanf("%lld", &op_quant);
+	for(i = 0; i < op_quant; ++i)
+	{
+		scanf("%[^\n]", command);
+		if( !(strcmp(command, "ADD")) )
+		{
+			scanf("%lld", &insert_dist);
+			//call insertion function
+		}
+		else if( !(strcmp(command, "DEL")) )
+		{
+			scanf("%lld %lld", &left_del_lim, &right_del_lim);
+			//call deletion function
+		}
+	}
 	return 0;
 }
 
