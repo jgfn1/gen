@@ -20,6 +20,7 @@ bool BT_pre_order(tree* root);
 bool BT_in_order(tree* root);
 
 void scene_array_builder(long long int* obj_arr, long long int obj_num, long long int seedD, long long int param_A, long long int param_C, long long int dist_sup_lim);
+tree* BST_builder(long long int* obj_arr, long long int obj_num);
 
 int global;
 
@@ -43,9 +44,13 @@ int main()
 
 	scanf("%lld %lld %lld %lld %lld", &obj_num, &dist_sup_lim, &seedD, &param_A, &param_C);
 	obj_arr = (long long int*) malloc(obj_num * sizeof(long long int));
+	
 	//call the scene_array_builder function
 	scene_array_builder(obj_arr, obj_num, seedD, param_A, param_C, dist_sup_lim);
+	
 	//call the BST_builder function
+	root = BST_builder(obj_arr, obj_num);
+
 	/*scanf("%lld", &op_quant);
 	for(i = 0; i < op_quant; ++i)
 	{
@@ -64,15 +69,20 @@ int main()
 	return 0;
 }
 
+tree* BST_builder(long long int* obj_arr, long long int obj_num)
+{
+	
+}
+
 void scene_array_builder(long long int* obj_arr, long long int obj_num, long long int seedD, long long int param_A, long long int param_C, long long int dist_sup_lim)
 {
 	obj_arr[0] = seedD;
-	printf("%lld\n", obj_arr[0]);
+	// printf("seedD: %lld\n", obj_arr[0]);
 	long long int i;
 	for(i = 1; i < obj_num; ++i)
 	{
 		obj_arr[i] = (((param_A * obj_arr[i - 1]) + param_C) % dist_sup_lim);
-		printf("%lld\n", obj_arr[i]);
+		// printf("obj_arr[%lld]: %lld\n", i, obj_arr[i]);
 	}	
 }
 
