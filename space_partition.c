@@ -20,7 +20,7 @@ bool BT_pre_order(tree* root);
 bool BT_in_order(tree* root);
 
 void scene_array_builder(long long int* obj_arr, long long int obj_num, long long int seedD, long long int param_A, long long int param_C, long long int dist_sup_lim);
-tree* BST_builder(long long int* obj_arr, long long int obj_num);
+tree* BST_builder(long long int* obj_arr, long long int num_of_elem);
 
 int global;
 
@@ -69,9 +69,57 @@ int main()
 	return 0;
 }
 
-tree* BST_builder(long long int* obj_arr, long long int obj_num)
+long long int median(long long int a, long long int b, long long int c)
 {
-	
+	if(a > b && a > c)
+	{
+		if(b > c)
+			return b;
+		else
+			return c;
+	}
+	else if(a < b && a < c);
+	{
+		if(b > c)
+			return c;
+		else
+			return b;
+	}
+	else
+		return a;	
+}
+
+tree* BST_builder(long long int* obj_arr, long long int num_of_elem)
+{
+	if(num_of_elem > 0)
+	{
+		tree* root = NULL;
+		long long int pivot;	
+		long long int i = 0;
+		long long int j = 0;
+		long long int k = 0;
+
+
+		if(num_of_elem < 3)
+			pivot = obj_arr[0];
+		else
+			pivot = median(obj_arr[0], obj_arr[ (num_of_elem - 1)/2 ], obj_arr[num_of_elem - 1]);
+
+		root = BST_insert(root, pivot);
+
+		long long int* left_array = (long long int*) malloc((num_of_elem - 1) * sizeof(long long int));
+		long long int* right_array = (long long int*) malloc((num_of_elem - 1) * sizeof(long long int));
+		
+		for(i = 0; i < (num_of_elem - 1); ++i)
+		{
+			if(obj_arr[0] < pivot && )
+			{
+				left_array[j] = obj_arr
+			}
+		}
+
+	}
+	return NULL;
 }
 
 void scene_array_builder(long long int* obj_arr, long long int obj_num, long long int seedD, long long int param_A, long long int param_C, long long int dist_sup_lim)
