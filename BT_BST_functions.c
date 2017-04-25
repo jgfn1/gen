@@ -30,7 +30,7 @@ int main()
 	int command;
 	do 
 	{
-		printf("Type 1 to insert a node, 2 to delete or 0 to exit: ");
+		printf("Type 1 to insert a node, 2 to delete, 3 to query the existence of a value or 0 to exit: ");
 		scanf("%d", &command);
 
 		if(command == 1)
@@ -70,6 +70,20 @@ int main()
 			printf("Post-order Traversal:\n");
 			BT_post_order(root);
 			printf("\n");
+		}
+		else if(command == 3)
+		{
+			printf("Type the value to be queried: ");
+			scanf("%d", &value);
+			tree* query_root = BST_search(root, value);
+			if(query_root == NULL)
+			{
+				printf("1 || The value is not in the tree.\n");
+			}
+			else
+			{
+				printf("0 || The value %d is in the tree.\n", query_root->value);	
+			}
 		}
 
 	} while(command != 0);
