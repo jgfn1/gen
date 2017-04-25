@@ -36,7 +36,7 @@ int main()
 	long long int insert_dist;		//D
 	long long int left_del_lim;		//L
 	long long int right_del_lim;	//R
-	long long int i;
+	long long int i = 0;
 	char command[3];
 
 
@@ -51,7 +51,9 @@ int main()
 	//call the BST_builder function
 	root = BST_builder(obj_arr, obj_num);
 
-	/*scanf("%lld", &op_quant);
+	printf("%lld: %d\n", i, BT_height(root));
+
+	scanf("%lld", &op_quant);
 	for(i = 0; i < op_quant; ++i)
 	{
 		scanf("%[^\n]", command);
@@ -65,11 +67,11 @@ int main()
 			scanf("%lld %lld", &left_del_lim, &right_del_lim);
 			//call deletion function
 		}
-	}*/
+	}
 	return 0;
 }
 
-long long int median(long long int a, long long int b, long long int c)
+/*long long int median(long long int a, long long int b, long long int c)
 {
 	if(a > b && a > c)
 	{
@@ -87,7 +89,7 @@ long long int median(long long int a, long long int b, long long int c)
 	}
 	else
 		return a;	
-}
+}*/
 
 tree* BST_builder(long long int* obj_arr, long long int num_of_elem)
 {
@@ -99,25 +101,75 @@ tree* BST_builder(long long int* obj_arr, long long int num_of_elem)
 		long long int j = 0;
 		long long int k = 0;
 
-
 		if(num_of_elem < 3)
+		{
 			pivot = obj_arr[0];
+			obj_arr[0] = -1;
+		}
 		else
-			pivot = median(obj_arr[0], obj_arr[ (num_of_elem - 1)/2 ], obj_arr[num_of_elem - 1]);
-
-		root = BST_insert(root, pivot);
+		{
+			long long int a;
+			long long int b;
+			long long int c;
+			a = obj_arr[0];
+			b = obj_arr[ (num_of_elem - 1)/2 ];
+			c = obj_arr[num_of_elem - 1];
+			
+			if(a > b && a > c)
+			{
+				if(b > c)
+				{
+					pivot = b;
+					obj_arr[ (num_of_elem - 1)/2 ] = -1;
+				}
+				else
+				{
+					pivot = c;
+					obj_arr[num_of_elem - 1] = -1;		
+				}
+			}
+			else if(a < b && a < c)
+			{
+				if(b > c)
+				{
+					pivot = c;
+					obj_arr[num_of_elem - 1] = -1;
+				}
+				else
+				{
+					pivot = b;
+					obj_arr[ (num_of_elem - 1)/2 ] = -1;	
+				}	
+			}
+			else
+			{
+				pivot = a;
+				obj_arr[0] = -1;
+			}
+			// printf("Pivot: %lld\n", pivot);
+		}
 
 		long long int* left_array = (long long int*) malloc((num_of_elem - 1) * sizeof(long long int));
 		long long int* right_array = (long long int*) malloc((num_of_elem - 1) * sizeof(long long int));
 		
-		for(i = 0; i < (num_of_elem - 1); ++i)
+		for(i = 0; i < num_of_elem; ++i)
 		{
-			if(obj_arr[0] < pivot && )
+			if(obj_arr[i] < pivot && obj_arr[i] != -1)
 			{
-				left_array[j] = obj_arr
+				left_array[j] = obj_arr[i];
+				j++;
+			}
+			else if(obj_arr[i] != -1)
+			{
+				right_array[k] = obj_arr[i];
+				k++;
 			}
 		}
 
+		root = BST_insert(root, pivot);
+		root->left = BST_builder(left_array, j);
+		root->right = BST_builder(right_array, k);
+		return root;
 	}
 	return NULL;
 }
