@@ -13,8 +13,10 @@ typedef struct tree
 tree* BST_delete(tree* root, int value);
 tree* BST_delete_min(tree* root);
 tree* BST_insert(tree* root, int value);
-int max(int a, int b);
+tree* BST_search(tree* root, int value);
+tree* BST_search_in_range_and_delete(tree* root, long long int left_del_lim, long long int right_del_lim/*, long long int* del_quant*/);
 
+int max(int a, int b);
 int BT_height(tree* root);
 bool BT_pre_order(tree* root);
 bool BT_in_order(tree* root);
@@ -23,10 +25,12 @@ void scene_array_builder(long long int* obj_arr, long long int obj_num, long lon
 tree* BST_builder(long long int* obj_arr, long long int num_of_elem);
 
 int global;
-
+long long int del_quant = 0;
 int main()
 {
 	tree* root = NULL;
+	tree* query_root;
+	tree* root_del;
 	long long int obj_num;			//N
 	long long int dist_sup_lim;		//M
 	long long int seedD;			//seedD
@@ -37,6 +41,7 @@ int main()
 	long long int left_del_lim;		//L
 	long long int right_del_lim;	//R
 	long long int i = 0;
+	long long int j = 0;
 	char command[3];
 
 
@@ -56,40 +61,39 @@ int main()
 	scanf("%lld", &op_quant);
 	for(i = 0; i < op_quant; ++i)
 	{
-		scanf("%[^\n]", command);
+		scanf("%s", command);
 		if( !(strcmp(command, "ADD")) )
 		{
 			scanf("%lld", &insert_dist);
-			//call insertion function
+			query_root = BST_search(root, insert_dist);
+			if(query_root == NULL)
+			{
+				printf("%lld: 1\n", (i + 1));
+				//call insertion function
+				root = BST_insert(root, insert_dist);
+			}
+			else
+			{
+				printf("%lld: 0\n", (i + 1));	
+			}
 		}
-		else if( !(strcmp(command, "DEL")) )
+		else /*if( !(strcmp(command, "DEL")) )*/
 		{
+			del_quant = 0;
 			scanf("%lld %lld", &left_del_lim, &right_del_lim);
-			//call deletion function
+			
+			root_del = BST_search_in_range_and_delete(root, left_del_lim, right_del_lim/*, &del_quant*/);
+			
+			while(root_del != NULL)
+			{
+				root = BST_delete(root, root_del->value);
+				root_del = BST_search_in_range_and_delete(root, left_del_lim, right_del_lim/*, &del_quant*/);
+			}
+			printf("%lld: %lld\n", (i + 1), del_quant);
 		}
 	}
 	return 0;
 }
-
-/*long long int median(long long int a, long long int b, long long int c)
-{
-	if(a > b && a > c)
-	{
-		if(b > c)
-			return b;
-		else
-			return c;
-	}
-	else if(a < b && a < c);
-	{
-		if(b > c)
-			return c;
-		else
-			return b;
-	}
-	else
-		return a;	
-}*/
 
 tree* BST_builder(long long int* obj_arr, long long int num_of_elem)
 {
@@ -101,12 +105,7 @@ tree* BST_builder(long long int* obj_arr, long long int num_of_elem)
 		long long int j = 0;
 		long long int k = 0;
 
-		if(num_of_elem < 3)
-		{
-			pivot = obj_arr[0];
-			obj_arr[0] = -1;
-		}
-		else
+		if(num_of_elem >= 3)
 		{
 			long long int a;
 			long long int b;
@@ -147,6 +146,11 @@ tree* BST_builder(long long int* obj_arr, long long int num_of_elem)
 				obj_arr[0] = -1;
 			}
 			// printf("Pivot: %lld\n", pivot);
+		}
+		else
+		{
+			pivot = obj_arr[0];
+			obj_arr[0] = -1;
 		}
 
 		long long int* left_array = (long long int*) malloc((num_of_elem - 1) * sizeof(long long int));
@@ -261,6 +265,41 @@ tree* BST_insert(tree* root, int value)
 	}
 }
 
+tree* BST_search_in_range_and_delete(tree* root, long long int left_del_lim, long long int right_del_lim/*, long long int* del_quant*/) 
+{
+	if(root != NULL)
+	{
+		if(root->value <= right_del_lim && root->value >= left_del_lim)
+		{
+			del_quant++;
+			return root;
+		}
+		
+		else if(root->value > right_del_lim)
+			return BST_search_in_range_and_delete(root->left, left_del_lim, right_del_lim/*, del_quant*/);
+		
+		else if(root->value < left_del_lim)
+			return BST_search_in_range_and_delete(root->right, left_del_lim, right_del_lim/*, del_quant*/);
+	}
+	return NULL;
+}
+
+tree* BST_search(tree* root, int value)
+{
+	if(root != NULL)
+	{
+		if(root->value == value)
+			return root;
+		
+		else if(value < root->value)
+			return BST_search(root->left, value);
+		
+		else 
+			return BST_search(root->right, value);
+	}
+	return NULL;
+}
+
 int max(int a, int b)
 {
 	return (a >= b)? a : b;
@@ -284,18 +323,6 @@ bool BT_pre_order(tree* root)
 		printf("%d ", root->value);
 		BT_pre_order(root->left);
 		BT_pre_order(root->right);
-		return true;
-	}
-	return false;
-}
-
-bool BT_in_order(tree* root)
-{
-	if(root != NULL)
-	{
-		BT_in_order(root->left);
-		printf("%d ", root->value);
-		BT_in_order(root->right);
 		return true;
 	}
 	return false;
