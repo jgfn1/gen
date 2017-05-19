@@ -14,6 +14,7 @@ heap* heap_insert(heap* Heap, int value);
 heap* bubble_up(heap* Heap);
 heap* build_heap(heap* Heap);
 void heapify(heap* Heap, int sub_tree_index);
+int heap_extract(heap* Heap)
 
 int* array_doubleler(int** array, int* array_size);
 
@@ -72,6 +73,29 @@ void heapify(heap* Heap, int sub_tree_index)
 		Heap->array[node] = exchanger;
 		heapify(Heap, node);
 	}
+}
+
+int heap_extract(heap* Heap)
+{
+	int removed = Heap->array[0];
+	int exchanger = Heap->array[0];
+	Heap->array[0] = Heap->array[Heap->size - 1];
+	Heap->array[Heap->size - 1] = exchanger;
+	heapify(Heap, 0);
+	return removed;
+}
+
+/*Requires the order relation to be ">=".*/
+void heapsort(int* array, int array_size)
+{
+	heap* Heap;
+	Heap->array = array;
+	Heap->array_size = array_size;
+	int i;
+
+	build_heap(Heap);
+	for(i = array_size - 1; i >= 0 ; --1)
+		array[i] = heap_extract(Heap);
 }
 
 int* array_doubleler(int** array, int* array_size)
