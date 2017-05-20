@@ -2,7 +2,7 @@
 #include "stdlib.h"
 #include "string.h"
 
-typedef struct heap
+typedef struct heaper
 {
     char* array;
     int array_size;
@@ -19,10 +19,11 @@ char* array_doubleler(char** array, int* array_size);
 
 int main()
 {
-    heap Heap;
-    Heap.array = (char*) malloc(sizeof(char));
-    Heap.array_size = 1;
-    Heap.size = 0;
+    heap* Heap;
+    Heap = (heap*) malloc(sizeof(heap));
+    Heap->array = (char*) malloc(sizeof(char));
+    Heap->array_size = 1;
+    Heap->size = 0;
     char alphabet[63];
     char instruction[5];
     char push[5] = "PUSH";
@@ -46,17 +47,17 @@ int main()
     	if((strcmp(instruction, push)) == 0)
     	{
     		scanf("%s", message);
-    		if(Heap.size == 0)
+    		if(Heap->size == 0)
     		{
-    			Heap.array = message;
-    			Heap.size = (int) strlen(message);
-    			build_heap(&Heap);
+    			Heap->array = message;
+    			Heap->size = (int) strlen(message);
+    			build_heap(Heap);
     		}
-    		else if(Heap.size > 0)
+    		else if(Heap->size > 0)
     		{
     			for(i = 0; message[i] != '\0'; ++i)
     			{
-    				heap_insert(&Heap, message[i]);
+    				heap_insert(Heap, message[i]);
     			}
     		}
     	}
@@ -66,7 +67,7 @@ int main()
     		scanf("%ld", &pop_num);
     		for (i = 0; i < pop_num; ++i)
     		{
-    			temp = heap_extract(&Heap);
+    			temp = heap_extract(Heap);
     			if((temp > 64 && temp < 78) || (temp > 96 && temp < 110))
     				temp += 13;
     			else if((temp > 77 && temp < 91) || (temp > 109 && temp < 123))
