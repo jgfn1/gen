@@ -16,10 +16,14 @@ void build_heap(heap* Heap);
 void heapify(heap* Heap, int sub_tree_index);
 int heap_extract(heap* Heap);
 void heapsort(int* array, int array_size);
+
 int* array_doubleler(int** array, int* array_size);
 
 void heap_update(heap* Heap, int old_value, int new_value);
 int heap_pos(heap* Heap, int value);
+
+int* array_doubleler(int** array, int* array_size);
+
 
 int main()
 {
