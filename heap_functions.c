@@ -24,7 +24,6 @@ int heap_pos(heap* Heap, int value);
 
 int* array_doubleler(int** array, int* array_size);
 
-
 int main()
 {
     heap Heap;
@@ -81,32 +80,6 @@ int main()
         }
     } while(command != 0);
     return 0;
-}
-
-int heap_pos(heap* Heap, int value)
-{
-    int i;
-    for(i = 0; i < Heap->array_size; ++i)
-    {
-        if(Heap->array[i] == value)
-            return i;
-    }
-    return -1;
-}
-
-void heap_update(heap* Heap, int old_value, int new_value)
-{
-    if(old_value != new_value)
-    {
-        int i = heap_pos(Heap, old_value);
-        if(i != -1)
-        {
-            Heap->array[i] = new_value;
-            build_heap(Heap);
-        }
-        else
-            heap_insert(Heap, new_value);
-    }
 }
 
 heap* heap_insert(heap* Heap, int value)
